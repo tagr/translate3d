@@ -2,8 +2,7 @@
  * @preserve jquery.translate3d.js
  * Author: Andy Merhaut
  * Free to modify and use under the MIT license
- * github.com/tagr/translate3d
- * Plugin credit to jQuery Boilerplate (github.com/jquery-boilerplate/jquery-boilerplate/)
+ * https://github.com/tagr/translate3d
  */
 ;(function ( $, window, document, undefined ) {
 
@@ -69,7 +68,7 @@
             }
   
             // Append the dynamic CSS to the document (if it does not yet exist).
-            if (document.querySelector(config.cssClass) === null) {
+            if (document.querySelector('.' + config.cssClass) === null) {
                 var css = document.createElement('style');
                 css.type = 'text/css';
                 css.title = config.cssClass;
@@ -80,7 +79,8 @@
             }
 
             //Append the dynamic CSS class name to the current element.
-            this.element.className += ' ' + config.cssClass;
+            //this.element.className += ' ' + config.cssClass;
+            this.element.classList.add(config.cssClass);
         }
     };
 
