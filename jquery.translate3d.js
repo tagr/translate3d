@@ -14,7 +14,7 @@
         cssClass: 'translate3d_' + (Math.random().toString(36).substr(2, 12)),
         direction: 'alternate',
         duration: '20',
-        endX: window.innerWidth,
+        endX: 0,
         endY: 0,
         endZ: 0,
         startX: 0,
