@@ -2,7 +2,8 @@
  * @preserve jquery.translate3d.js
  * Author: Andy Merhaut
  * Free to modify and use under the MIT license
- * //github.com/tagr/translate3d
+ * github.com/tagr/translate3d
+ * Plugin credit to jQuery Boilerplate (github.com/jquery-boilerplate/jquery-boilerplate/)
  */
 ;(function ( $, window, document, undefined ) {
 
