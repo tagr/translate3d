@@ -12,7 +12,7 @@
         count: 0,
         cssClass: 'translate3d_' + (Math.random().toString(36).substr(2, 12)),
         direction: 'alternate',
-        duration: '20',
+        duration: 7,
         endX: 0,
         endY: 0,
         endZ: 0,
@@ -36,13 +36,15 @@
     translate3d.prototype = {
         init: function () {
 
-            //Generate CSS
+            //Get settings
             var config = this.settings;
             var count = config.count === 0 ? 'infinite' : config.count;
 
             // Animation CSS
-            var styles = '.' + config.cssClass +' {\n    animation: ' + config.cssClass + ' ' + 
+            var inlineStyles, styles = 
+                '.' + config.cssClass +' {\n    animation: ' + config.cssClass + ' ' + 
                 config.duration + 's ' + config.timing + ' ' + count + ' ' + config.direction + ';\n';
+            
             if (config.useVendorPrefixes && config.vendorPrefixes !== null) {
                 var c = config.vendorPrefixes.length;
                 while (c--) {
@@ -54,32 +56,35 @@
         
             // Keyframes CSS
             styles += '@keyframes ' + config.cssClass + 
-             '{\n    0% { transform: translate3d(' + config.startX + 'px,' + config.startY + 'px,' + config.startZ + 'px); }' +
-             '\n    100% { transform: translate3d(' + config.endX + 'px,' + config.endY + 'px,' + config.endZ + 'px); }\n}\n';
+             ' {\n    0% { transform: translate3d(' + config.startX + 'px,' + config.startY + 'px,' + config.startZ + 'px); }\n}';
+            inlineStyles = '; transform: translate3d(' + config.endX + 'px,' + config.endY + 'px,' + config.endZ + 'px); ';
 
             if (config.useVendorPrefixes && config.vendorPrefixes !== null) {
                 var c = config.vendorPrefixes.length;
                 while (c--) {
-                    styles += '@-' + config.vendorPrefixes[c] + '-keyframes ' + config.cssClass + 
+                    styles += '\n@-' + config.vendorPrefixes[c] + '-keyframes ' + config.cssClass + 
                       ' {\n    0% { -' + config.vendorPrefixes[c] + 
-                      '-transform: translate3d(' + config.startX + 'px,' + config.startY + 'px,' + config.startZ + 'px); }' +
-                      '\n    100% { -' + config.vendorPrefixes[c] + '-transform: translate3d(' + config.endX + 'px,' + config.endY + 'px,' + config.endZ + 'px); }\n}\n';
+                      '-transform: translate3d(' + config.startX + 'px,' + config.startY + 'px,' + config.startZ + 'px); }\n}';
+                    inlineStyles += '-' + config.vendorPrefixes[c] + 
+                      '-transform: translate3d(' + config.endX + 'px,' + config.endY + 'px,' + config.endZ + 'px); ';
                 }
             }
+
+            var currentCss = this.element.getAttribute('style') === null ? '' : this.element.getAttribute('style') ;
+            this.element.setAttribute('style', currentCss + inlineStyles);
   
             // Append the dynamic CSS to the document (if it does not yet exist).
-            if (document.querySelector('.' + config.cssClass) === null) {
+            if (jQuery('style[title="' + config.cssClass + '"]').length === 0) {
                 var css = document.createElement('style');
                 css.type = 'text/css';
                 css.title = config.cssClass;
                 if (css.styleSheet) css.styleSheet.cssText = styles;
                   else css.appendChild(document.createTextNode(styles));
 
-                document.querySelector("head").appendChild(css);
+                document.querySelector("body").appendChild(css);
             }
 
             //Append the dynamic CSS class name to the current element.
-            //this.element.className += ' ' + config.cssClass;
             this.element.classList.add(config.cssClass);
         }
     };
@@ -88,9 +93,9 @@
     // preventing against multiple instantiations
     $.fn[ pluginName ] = function ( options ) {
         return this.each(function() {
-        if ( !$.data( this, "plugin_" + pluginName ) ) {
-            $.data( this, "plugin_" + pluginName, new translate3d( this, options ) );
-        }
+            if ( !$.data( this, "plugin_" + pluginName ) ) {
+                $.data( this, "plugin_" + pluginName, new translate3d( this, options ) );
+            }
         });
     };
 
